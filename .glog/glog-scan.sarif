@@ -1,0 +1,81 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Glog.AI",
+          "organization": "Glog.AI",
+          "fullName": "Glog, Making software more secure",
+          "version": "1.0.0",
+          "semanticVersion": "1.0.0",
+          "informationUri": "https://www.glog.ai",
+          "rules": [
+            {
+              "id": "glog-bccfa2c0-f9cb-4d25-a166-045200b1b1f6",
+              "help": {
+                "text": "",
+                "markdown": "### Description\n\nThe vulnerability \"Review URL Access for Approved Schemes: Unexpected Use of file:/ or Custom Schemes\" in Python arises when a program uses the `urlopen` function to open URLs without properly validating the scheme of the URL. This can lead to security issues if an attacker is able to supply a URL with a scheme that the application does not expect, such as `file:/` or a custom scheme. This could potentially allow unauthorized access to local files or execution of unintended actions.\n\n### General Mitigation Advice\n\n1. **Validate URL Schemes**: Ensure that only approved URL schemes are allowed. For example, restrict to `http` and `https` schemes.\n2. **Use a Whitelist**: Implement a whitelist of allowed schemes and validate the input URL against this list.\n3. **Sanitize Input**: Always sanitize and validate any input that will be used to construct URLs.\n4. **Use Libraries**: Consider using libraries that provide safe URL handling and validation.\n\n### Source Code Fix Recommendation\n\nTo mitigate this vulnerability, you can modify the code to validate the URL scheme before proceeding with `urlopen`.\n\n```python\nimport urllib.request\nfrom urllib.parse import urlparse\n\ndef open_url(link):\n    # Define allowed schemes\n    allowed_schemes = {'http', 'https'}\n    \n    # Parse the URL\n    parsed_url = urlparse(link)\n    \n    # Check if the scheme is allowed\n    if parsed_url.scheme not in allowed_schemes:\n        raise ValueError(f\"URL scheme '{parsed_url.scheme}' is not allowed.\")\n    \n    # Open the URL\n    with urllib.request.urlopen(link) as response:\n        return response.read()\n\n# Example usage\ntry:\n    content = open_url(\"http://example.com\")\n    print(content)\nexcept ValueError as e:\n    print(e)\n```\n\n### Library Dependencies\n\nTo execute the code example properly, the following standard library modules are required:\n\n- `urllib.request`\n- `urllib.parse`\n\nThese modules are part of Python's standard library, so no additional installation is necessary.\n\n### Relevant Links\n\n- [OWASP Top Ten](https://owasp.org/www-project-top-ten/)\n- [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)\n- [Common Weakness Enumeration (CWE-939)](https://cwe.mitre.org/data/definitions/939.html)"
+              },
+              "properties": {
+                "tags": [
+                  "B310"
+                ]
+              }
+            }
+          ],
+          "language": "en-US",
+          "contents": [
+            "localizedData",
+            "nonLocalizedData"
+          ],
+          "isComprehensive": false
+        }
+      },
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "glog-bccfa2c0-f9cb-4d25-a166-045200b1b1f6",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Applications/Link%20Shortener%20and%20Extractor/source-code.py"
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 21,
+                  "endLine": 13,
+                  "endColumn": 34,
+                  "snippet": {
+                    "text": "    shortened_url = urlopen(link)\n"
+                  }
+                },
+                "contextRegion": {
+                  "startLine": 12,
+                  "endLine": 14,
+                  "snippet": {
+                    "text": "def link_opener(link):\n    shortened_url = urlopen(link)\n    real_link = shortened_url.geturl()  # getting real link\n"
+                  }
+                }
+              }
+            }
+          ],
+          "properties": {
+            "issue_severity": "MEDIUM",
+            "issue_confidence": "HIGH"
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
