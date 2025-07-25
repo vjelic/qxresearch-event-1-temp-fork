@@ -24,6 +24,6 @@ jobs:
           lang: 'python'
           debug: 'false'
           client: 'demo'
-          upload: 'upload'
+          upload: 'true'
           github-token: ${{ secrets.PAT_TOKEN }}
           glog-token: ${{ secrets.GLOG_TOKEN }}
